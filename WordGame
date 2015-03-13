@@ -1,0 +1,83 @@
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Scanner;
+
+ class coor{
+	int xcoor;
+	int ycoor;
+	public coor(int x,int y){
+		this.xcoor=x;
+		this.ycoor=y;
+	}
+	public boolean equals(Object o){
+		coor tmp=(coor)o;
+		return tmp.xcoor==this.xcoor && tmp.ycoor==this.ycoor;
+	}
+}
+
+public class WordGame {
+	
+	public static List<coor> tmp=new LinkedList<coor>();
+	public static ArrayList<String> grid= new ArrayList<String>();
+	public static LinkedList<coor> search(String str,LinkedList<coor> tmp,ArrayList<String> grid,coor c){
+		try{
+		if(str.equals(""))
+			return tmp;
+		else if(str.charAt(0)!=grid.get(c.xcoor).charAt(c.ycoor) || tmp.contains(new coor(c.xcoor,c.ycoor)))
+			return new LinkedList<coor>();
+		LinkedList<coor> tempo=new LinkedList<coor>();
+		LinkedList<coor> tempo1=new LinkedList<coor>();
+		tempo1.addAll(tmp);
+		tempo1.add(c);
+		 for(int i=-1;i<=1;i++){
+			 for(int j=-1;j<=1;j++){
+				 tempo.addAll(search(str.substring(1),tempo1,grid,new coor(c.xcoor+i,c.ycoor+j)));
+			 }
+		 }
+		return tempo;
+	} catch(Exception e){
+return new LinkedList<coor>();
+}
+	
+}
+		
+
+	public static void main(String[] args) throws FileNotFoundException {
+		String srch="heena";
+		LinkedList<coor> mark=new LinkedList();
+		Scanner s=null;
+		s=new Scanner(new BufferedReader(new FileReader("/Users/ashaik/Desktop/input_test.txt")));
+
+		while(s.hasNextLine()){
+			grid.add(s.nextLine());
+		}
+		Iterator i= grid.iterator();
+		 int x=0;
+		  while(i.hasNext()){
+			  String s1=(String) i.next();
+		  for(int j=0;j<=s1.length()-1;j++){
+			  tmp.addAll(search(srch,new LinkedList<coor>(),grid,new coor(x,j)));
+			  }
+			  x++;
+		  }
+		  Iterator i1= grid.iterator();
+			 int x1=0;
+			  while(i1.hasNext()){
+				  String s1=(String) i1.next();
+				  for(int j=0;j<=s1.length()-1;j++){
+					 System.out.print(tmp.contains(new coor(x1,j))?grid.get(x1).charAt(j):".");
+					  }
+					  x1++;
+					 System.out.println("");
+				  }
+
+}
+}
+
+
